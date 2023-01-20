@@ -1,52 +1,63 @@
-﻿using HeroApi.Models;
+﻿using HeroApi.Data;
+using HeroApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace HeroApi.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class HeroController : ControllerBase
     {
 
-        private static List<Hero> _heroes = new List<Hero>()
-        {
-            new Hero(){Id=1, Name="Tony Stark", Team="Avengers", SuperHeroName="IronMan"}, 
-            new Hero(){Name="Peter parker", Id=2, SuperHeroName="Spiderman", Team="Marvel"}
-        };
+        private readonly ApiDbContext _context;
 
+        public HeroController(ApiDbContext context)
+        {
+            _context = context;
+        }
 
 
         // GET: api/<HeroController>
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(_heroes);
+            return Ok(await _context.Heroes.ToListAsync());
         }
 
         // GET api/<HeroController>/5
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return Ok(_heroes.FirstOrDefault(x => x.Id == id));
+            var hero = await _context.Heroes.FirstOrDefaultAsync(x => x.Id == id);
+
+
+            if (hero == null)
+            {
+                return NotFound();
+            }
+            return Ok(hero);
         }
 
         // POST api/<HeroController>
         [HttpPost]
-        public IActionResult Post(Hero hero)
+        public async Task<IActionResult> Post(Hero hero)
         {
-            _heroes.Add(hero);
+            _context.Heroes.Add(hero);
+
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
         // PUT api/<HeroController>/5
         [HttpPut("{id}")]
-        public IActionResult Put(Hero hero)
+        public async Task<IActionResult> Put(Hero hero)
         {
 
-            var heroToUpdate = _heroes.FirstOrDefault(x => x.Id == hero.Id);
-            if(heroToUpdate == null)
+            var heroToUpdate = await _context.Heroes.FirstOrDefaultAsync(x => x.Id == hero.Id);
+            if (heroToUpdate == null)
             {
                 return NotFound();
             }
@@ -60,16 +71,18 @@ namespace HeroApi.Controllers
 
         // DELETE api/<HeroController>/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
 
-            var hero = _heroes.FirstOrDefault(x => x.Id == id);
+            var hero = _context.Heroes.FirstOrDefault(x => x.Id == id);
             if (hero == null)
             {
                 return NotFound();
             }
 
-            _heroes.Remove(hero);
+            _context.Heroes.Remove(hero);
+
+            await _context.SaveChangesAsync();
             return Ok();
 
         }
