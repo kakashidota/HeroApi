@@ -1,0 +1,25 @@
+1. Skapa ett nytt Web API med controllers
+2. Ta bort all boilerplate kod
+3. Skapa en ny map och döp den till Models
+4. Skapa en klass och döp den till Hero
+5. Skapa relevanta properties
+6. Skapa en ny controller och döp den till HeroController
+7. I din controller skapa en lista som innehåller Hero och skapa två stycken heroes
+8. Skapa CRUD funktionalitet för att modifiera datan i listan
+9. Installera paket:
+		dotnet add package Microsoft.EntityFrameworkCore.Sqlite
+		dotnet add package Microsoft.EntityFrameworkCore.Tools
+10. Skapa en ny map och döp den till Data. I denna mappen skapa en klass som heter ApiDbContext.cs
+11. Lägg till nödvändig boilerplate kod för att komma igång
+12. I din appsettings.json lägg till connection string
+13. Använd dependency injection i din program.cs för att kunna komma åt ApiDbContext
+14. Installera paket:
+		dotnet tool install -global dotnet-ef
+		dotnet add package Microsoft.EntityFrameworkCore.Design
+15. Skapa en SQL fil med EF migrations genom att skriva: dotnet ef migrations add "initial migration"  i terminalen
+16. Skriv sedan dotnet ef database update i terminalen
+17. Öppna DB browser och säkerställ att din db har skapats
+18. Du kan nu ta bort din "mockdata" och skapa en koppling till dbcontext i din controller
+19. Skapa en konstruktor för din controller som initierar din context varibel
+20. Uppdatera alla funktioner i din controller
+21. Säkerställ att programmet funkar och datan uppdateras vid behov
